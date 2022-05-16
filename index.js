@@ -7,10 +7,10 @@ const path = require('path');
 const session = require('express-session');
 const dotenv = require('dotenv');
 
-
+dotenv.config();
 const app = express();
 app.set('port', process.env.PORT || 8000);
-
+//const mainPage = require('./routes/main');  //메인페이지 미작성
 
 //데이터베이스 연결부. 아직 미설정으로 주석처리
 /*
@@ -39,6 +39,8 @@ app.use(session({
 }));
 
 
+
+//app.use('/', mainPage);
 
 //설정된 라우터 이외의 라우터 이동시 작동구문
 app.use((req, res, next) => {
