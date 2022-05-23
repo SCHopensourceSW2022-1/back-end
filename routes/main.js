@@ -1,0 +1,39 @@
+// 05.16 / 접속 시 작동함수
+// 05/24 데이터베이스 요청시 작동함수 약간 추가(변경예정)
+
+const express = require('express');
+const Info = require('../models/info');
+const path = require('path');
+
+//const Info = require('../models/info') db관련 파일 들어갈 예정
+
+const router = express.Router();
+
+router.get('/', (req, res, next) => {
+        return res.send('hello');
+});
+
+router.get('/pika', async (req, res, next) => {
+    const data = await Info.findOne({ where: {Name: 'pika'} });
+    if (!data) {
+        return res.send('pika');
+    }
+    else {
+        const name = path.join(data.Image);
+        return res.send(name);
+    }
+});
+
+router.get('/img/:name', (req, res, next) => {
+    const name = req.params.name;
+    res, send(`./img/${name}`);
+})
+/*
+router.get('/data', (req, res, next) => {
+
+})*/
+
+
+
+
+module.exports = router;
