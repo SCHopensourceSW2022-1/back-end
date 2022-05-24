@@ -11,7 +11,7 @@ const session = require('express-session');
 const dotenv = require('dotenv');
 const { sequelize } = require('./models');
 const mysql = require('mysql');
-const sql = require('./mysql/sql.js'); // SQL 쿼리문이 작성되어 있는 파일
+// const sql = require('./mysql/sql.js'); // SQL 쿼리문이 작성되어 있는 파일
 
 
 dotenv.config();
@@ -19,14 +19,18 @@ const app = express();
 app.set('port', process.env.PORT || 8000);
 const mainPage = require('./routes/main');  //메인페이지 미작성
 
-//데이터베이스 연결
-const pool  = mysql.createPool({  // Pool(커넥션 과부하 방지를 위한) 생성
-    host            : process.env.MYSQL_HOST,
-    port            : process.env.MYSQL_PORT,
-    user            : process.env.MYSQL_USERNAME,
-    password        : process.env.MYSQL_PASSWORD,
-    database        : process.env.MYSQL_DB
+//mysql 연동
+const con = mysql.createConnection({
+    host: 'localhost',
+    port: '3306',
+    user: 'sw_user',
+    password: 'sw2022',
+    database: 'sw_data'
 });
+
+var connection = mysql.createConnection(con); // DB 커넥션 생성
+connection.connect(); 
+
 
 sequelize.sync({ force: false })
     .then(() => {
@@ -34,7 +38,7 @@ sequelize.sync({ force: false })
     })
     .catch((err) => {
         console.error(err);
-    });
+    }); 
 
   
   /* 쿼리문을 실행하고 결과를 반환하는 함수 */
@@ -49,12 +53,7 @@ const query = async (alias, values) => {
     })}
       );
   }
-  
-/*  //어떤 구문인지 설명좀! 에러나서 주석처리 해놨음.
-  module.exports = {
-      query;
-  };
-  */
+
 
 app.use(morgan('dev'));
 //app.use(express.static(path.join(__dirname, '../front-end/build')));   접속시 기본 연결 폴더를 front-end 쪽으로 바꿔놓기 위한 설정 구문. 정확한 위치를 모르니 일단 주석처리
