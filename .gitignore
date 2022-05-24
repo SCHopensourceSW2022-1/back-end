@@ -82,7 +82,10 @@ web_modules/
 
 # dotenv environment variable files
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> 92246852f27942c2087925bdda80b43c309fa227
 =======
 >>>>>>> 92246852f27942c2087925bdda80b43c309fa227
 .env.development.local
