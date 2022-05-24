@@ -4,6 +4,7 @@
 const express = require('express');
 const Info = require('../models/info');
 const path = require('path');
+const fs = require('fs').promises;
 
 //const Info = require('../models/info') db관련 파일 들어갈 예정
 
@@ -13,14 +14,17 @@ router.get('/', (req, res, next) => {
         return res.send('hello');
 });
 
-router.get('/pika', async (req, res, next) => {
-    const data = await Info.findOne({ where: {Name: 'pika'} });
+router.get('/:id', async (req, res, next) => {
+    const id = req.params.id;
+    const data = await Info.findOne({ where: { Name: id } });
     if (!data) {
         return res.send('pika');
     }
     else {
-        const name = path.join(data.Image);
-        return res.send(name);
+        const name = path.join(__dirname + '/../img/' + data.Image);
+        const content = await fs.readFile(name);
+        console.log(content);
+        return res.end(content);
     }
 });
 
