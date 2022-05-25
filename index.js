@@ -20,17 +20,16 @@ app.set('port', process.env.PORT || 8000);
 const mainPage = require('./routes/main');  //메인페이지 미작성
 
 //mysql 연동
-const con = mysql.createConnection({
+var connection = mysql.createConnection({
     host: 'localhost',
     port: '3306',
     user: 'sw_user',
-    password: 'sw2022',
+    password: 'sw2022!',
     database: 'sw_data'
 });
 
-var connection = mysql.createConnection(con); // DB 커넥션 생성
-connection.connect(); 
-
+ // DB 커넥션 생성
+connection.connect();   // DB 접속
 
 sequelize.sync({ force: false })
     .then(() => {

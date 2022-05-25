@@ -4,7 +4,7 @@ const conn = {
     host: 'localhost',
     port: '3306',
     user: 'sw_user',
-    password: 'sw2022',
+    password: 'sw2022!',
     database: 'sw_data'
 };
 
