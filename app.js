@@ -12,3 +12,4 @@ app.listen(5000, function() {
 app.get('/', function(req,res) {
     res.send("<h1>hi friend!</h1>")
 })
+
