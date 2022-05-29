@@ -1,10 +1,14 @@
 // 05.16 / 접속 시 작동함수
 // 05/24 데이터베이스 요청시 작동함수 약간 추가(변경예정)
+// 05.29 bd추가 삭제 작성
 
 const express = require('express');
 const Info = require('../models/info');
 const path = require('path');
 const fs = require('fs').promises;
+
+
+let nameroute;  //이미지 파일 경로를 저장하기위한 변수
 const multer = require('multer');
 const storage = multer({
     storage: multer.diskStorage({
@@ -12,8 +16,8 @@ const storage = multer({
             cb(null, 'img/');
         },
         filename: function (req, file, cb) {
-            const name = new Date().valueOf() + path.extname(file.originalname);
-            cb(null, name);
+            nameroute = new Date().valueOf() + path.extname(file.originalname);
+            cb(null, nameroute);
         }
     }),
 });
@@ -30,7 +34,6 @@ router.get('/', (req, res, next) => {
 
 router.get('/data', async (req, res, next) => {
     const data = await Info.findAll();
-    console.log(data);
     if (!data) {
         return res.send('no data');
     }
@@ -39,14 +42,15 @@ router.get('/data', async (req, res, next) => {
 
 
 router.post('/create', upload.single(), async (req, res, next) => {
-    if (await Info.findOne({ where: { title: req.body.name } })) {
+    const newclub = await Info.findOne({ where: { title: req.body.name } })
+    if (!newclub) {
         const data = await Info.create({
             Name: req.body.name,
             ContentsMain: req.body.main,
             ContentsDetali: req.body.detail,
             Category: req.body.category,
             Class: req.body.class,
-            Image: name,
+            Image: nameroute,
         });
     }
 });
@@ -55,22 +59,22 @@ router.post('/create', upload.single(), async (req, res, next) => {
 router.get('/delete/:name', async (req, res, next) => {
     const name = req.params.name;
     const del = await Info.destroy({ where: { Name: name } })
-    return res.end('');
+    return res.end('delete');
 });
 
 router.get('/:id', async (req, res, next) => {
     const id = req.params.id;
-    const data = await Info.findAll({ where: { Category: id } });
+    const data = await Info.findOne({ where: { Name: id } });
     if (!data) {
         return res.send('pika');
     }
     else {
-        /*
+        
         const name = path.join(__dirname + '/../img/' + data.Image);
         const content = await fs.readFile(name);
-        console.log(content);
+        //console.log(content);
         return res.end(content);
-        */
+        
 
         return res.send(data);
     }

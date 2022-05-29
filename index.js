@@ -2,6 +2,7 @@
 //  05/15 DB 틀 작성 - 홍지민, 연동부분 코드만 작성하였고, 이후 확인 필요
 //  05/22 서버 실행여부 확인(현재 작동 안됨)
 //  05/24 서버 실행은 됨... db 아직 안 만듬 조금 만들고 연결하는 거 성공함.
+//  05/29 db create, delete 구문 추가(작동여부 모름.)
 
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -11,7 +12,7 @@ const session = require('express-session');
 const dotenv = require('dotenv');
 const { sequelize } = require('./models');
 const mysql = require('mysql');
-const sql = require('./mysql/sql.js'); // SQL 쿼리문이 작성되어 있는 파일
+
 
 
 dotenv.config();
@@ -19,14 +20,6 @@ const app = express();
 app.set('port', process.env.PORT || 8000);
 const mainPage = require('./routes/main');  
 
-//데이터베이스 연결
-const pool  = mysql.createPool({  // Pool(커넥션 과부하 방지를 위한) 생성
-    host            : process.env.MYSQL_HOST,
-    port            : process.env.MYSQL_PORT,
-    user            : process.env.MYSQL_USERNAME,
-    password        : process.env.MYSQL_PASSWORD,
-    database        : process.env.MYSQL_DB
-});
 
 sequelize.sync({ force: false })
     .then(() => {
@@ -37,25 +30,6 @@ sequelize.sync({ force: false })
     });
 
   
-  /* 쿼리문을 실행하고 결과를 반환하는 함수 */
-const query = async (alias, values) => {
-    return new Promise((resolve, reject) => {pool.query(sql[alias], values, (error, results) => {
-        if (error) {  // 에러 발생시 
-            console.log(error);
-            reject({
-                error
-            });
-        } else resolve(results); // 쿼리 결과를 전달
-    })}
-      );
-  }
-  
-/*  //어떤 구문인지 설명좀! 에러나서 주석처리 해놨음.
-  module.exports = {
-      query;
-  };
-  */
-
 app.use(morgan('dev'));
 //app.use(express.static(path.join(__dirname, '../front-end/build')));   접속시 기본 연결 폴더를 front-end 쪽으로 바꿔놓기 위한 설정 구문. 정확한 위치를 모르니 일단 주석처리
 app.use(express.json());
