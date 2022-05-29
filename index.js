@@ -11,7 +11,6 @@ const session = require('express-session');
 const dotenv = require('dotenv');
 const { sequelize } = require('./models');
 const mysql = require('mysql');
-// const sql = require('./mysql/sql.js'); // SQL 쿼리문이 작성되어 있는 파일
 
 
 dotenv.config();
@@ -19,17 +18,6 @@ const app = express();
 app.set('port', process.env.PORT || 8000);
 const mainPage = require('./routes/main');  //메인페이지 미작성
 
-//mysql 연동
-var connection = mysql.createConnection({
-    host: 'localhost',
-    port: '3306',
-    user: 'sw_user',
-    password: 'sw2022!',
-    database: 'sw_data'
-});
-
- // DB 커넥션 생성
-connection.connect();   // DB 접속
 
 sequelize.sync({ force: false })
     .then(() => {
