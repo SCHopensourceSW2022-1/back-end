@@ -80,12 +80,15 @@ web_modules/
 # Yarn Integrity file
 .yarn-integrity
 
+<<<<<<< HEAD
 # dotenv environment variable files
 
 .env.development.local
 .env.test.local
 .env.production.local
 .env.local
+=======
+>>>>>>> origin/main
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
