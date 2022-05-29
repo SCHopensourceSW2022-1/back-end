@@ -18,7 +18,8 @@ const mysql = require('mysql');
 dotenv.config();
 const app = express();
 app.set('port', process.env.PORT || 8000);
-const mainPage = require('./routes/main');  
+const mainPage = require('./routes/main');
+const logger = require('./logger');
 
 
 sequelize.sync({ force: false })
@@ -29,9 +30,17 @@ sequelize.sync({ force: false })
         console.error(err);
     });
 
-  
+//배포용 설정
+if (process.env.NODE_ENV === 'production') {
+    app.use(morgan('combined'));
+}
+else {
+    app.use(morgan('dev'));
+}
+//
+
 app.use(morgan('dev'));
-//app.use(express.static(path.join(__dirname, '../front-end/build')));   접속시 기본 연결 폴더를 front-end 쪽으로 바꿔놓기 위한 설정 구문. 정확한 위치를 모르니 일단 주석처리
+app.use(express.static(path.join(__dirname, '../front-end/build')));  // 접속시 기본 연결 폴더를 front-end 쪽으로 바꿔놓기 위한 설정 구문. 정확한 위치를 모르니 일단 주석처리
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -45,6 +54,14 @@ app.use(session({
     },
 }));
 
+// 배포용 설정
+if (process.env.NODE_ENV === 'production') {
+    //sessionOption.proxy = true;
+    //sessionOption.cookie.secure = true;
+}
+//app.use(session(sessionOption));
+//app.use(passport.initialize())
+//
 
 
 app.use("/", mainPage);
@@ -55,9 +72,10 @@ app.use("/", mainPage);
 app.use((req, res, next) => {
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
     error.status = 404;
+    logger.info('hello');
+    logger.error(error.message);
     next(error);
 });
-               
 
 //오류 처리부
 app.use((err, req, res, next) => {
