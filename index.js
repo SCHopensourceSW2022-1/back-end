@@ -2,6 +2,7 @@
 //  05/15 DB 틀 작성 - 홍지민, 연동부분 코드만 작성하였고, 이후 확인 필요
 //  05/22 서버 실행여부 확인(현재 작동 안됨)
 //  05/24 서버 실행은 됨... db 아직 안 만듬 조금 만들고 연결하는 거 성공함.
+//  05/29 db create, delete 구문 추가(작동여부 모름.)
 
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -16,7 +17,7 @@ const mysql = require('mysql');
 dotenv.config();
 const app = express();
 app.set('port', process.env.PORT || 8000);
-const mainPage = require('./routes/main');  //메인페이지 미작성
+const mainPage = require('./routes/main');  
 
 
 sequelize.sync({ force: false })
@@ -26,7 +27,6 @@ sequelize.sync({ force: false })
     .catch((err) => {
         console.error(err);
     }); 
-
 
 app.use(morgan('dev'));
 //app.use(express.static(path.join(__dirname, '../front-end/build')));   접속시 기본 연결 폴더를 front-end 쪽으로 바꿔놓기 위한 설정 구문. 정확한 위치를 모르니 일단 주석처리
@@ -46,6 +46,8 @@ app.use(session({
 
 
 app.use("/", mainPage);
+
+
 
 //설정된 라우터 이외의 라우터 이동시 작동구문
 app.use((req, res, next) => {

@@ -24,9 +24,13 @@ module.exports = class Info extends Sequelize.Model {
                 type: Sequelize.STRING(1000),
                 allowNull: true,
             },
-            category: { //center or class
+            Category: { //center or class
                 type: Sequelize.STRING(10),
                 allowNull: false,
+            },
+            Class: {
+                type: Sequelize.STRING(30),
+                allowNull: true,
             },
             Image: {
                 type: Sequelize.STRING(200),
