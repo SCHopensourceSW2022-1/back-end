@@ -27,20 +27,6 @@ sequelize.sync({ force: false })
         console.error(err);
     }); 
 
-  
-  /* 쿼리문을 실행하고 결과를 반환하는 함수 */
-const query = async (alias, values) => {
-    return new Promise((resolve, reject) => {pool.query(sql[alias], values, (error, results) => {
-        if (error) {  // 에러 발생시 
-            console.log(error);
-            reject({
-                error
-            });
-        } else resolve(results); // 쿼리 결과를 전달
-    })}
-      );
-  }
-
 
 app.use(morgan('dev'));
 //app.use(express.static(path.join(__dirname, '../front-end/build')));   접속시 기본 연결 폴더를 front-end 쪽으로 바꿔놓기 위한 설정 구문. 정확한 위치를 모르니 일단 주석처리
