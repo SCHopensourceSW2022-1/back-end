@@ -70,6 +70,9 @@ router.get('/data', async (req, res, next) => {
 router.get('/read/:id', async (req, res, next) => {
     const id = req.params.id;
     const data = await Info.findOne({ where: { Id: id } });
+    const name = path.join(__dirname + '/../img/' + data.Image);
+    const content = fs.readFileSync(name, 'base64');
+    data.dataValues.img = content;
     return res.send(data);
 });
 
@@ -114,8 +117,12 @@ router.get('/img/:id', async (req, res, next) => {
     }
 });
 
-
-
+/*
+router.use((req, res, next) => {
+    const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
+    error.status = 404;
+    next(error);
+});*/
 
 /*
 router.get('/data', (req, res, next) => {
