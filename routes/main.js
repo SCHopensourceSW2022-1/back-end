@@ -58,7 +58,8 @@ router.get('/data', async (req, res, next) => {
         const name = path.join(__dirname + '/../img/' + x.Image);
         const content = fs.readFileSync(name);
         //console.log(content);
-        data[i].img = content;
+        //console.log(data);
+        //data[i].dataValues.img = content;
     });
     //console.log(data);
     return res.send(data);
