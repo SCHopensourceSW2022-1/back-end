@@ -5,7 +5,7 @@
 const express = require('express');
 const Info = require('../models/info');
 const path = require('path');
-const fs = require('fs').promises;
+const fs = require('fs');
 
 const multer = require('multer');
 const storage = multer({
@@ -53,6 +53,14 @@ router.get('/data', async (req, res, next) => {
     if (!data) {
         return res.send('no data');
     }
+    //res.send(data);
+    const img1  = data.map( (x, i) => {
+        const name = path.join(__dirname + '/../img/' + x.Image);
+        const content = fs.readFileSync(name);
+        //console.log(content);
+        data[i].img = content;
+    });
+    //console.log(data);
     return res.send(data);
 });
 
