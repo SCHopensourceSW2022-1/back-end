@@ -66,6 +66,13 @@ router.get('/data', async (req, res, next) => {
     return res.send(data);
 });
 
+
+router.get('/read/:id', async (req, res, next) => {
+    const id = req.params.id;
+    const data = await Info.findOne({ where: { Id: id } });
+    return res.send(data);
+});
+
 /*
 models.post.findAll({
     // pagination
