@@ -63,7 +63,7 @@ router.get('/data', async (req, res, next) => {
         data[i].dataValues.img = content;
     });
     //console.log(data);
-    return res.send(data[0].dataValues.img);
+    return res.send(data.dataValues.img);
 });
 
 /*
