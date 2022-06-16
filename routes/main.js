@@ -7,7 +7,6 @@ const Info = require('../models/info');
 const path = require('path');
 const fs = require('fs').promises;
 
-
 const multer = require('multer');
 const storage = multer({
     storage: multer.diskStorage({
@@ -22,7 +21,10 @@ const storage = multer({
 });
 var upload = multer({ storage: storage })
 
-//const Info = require('../models/info') db관련 파일 들어갈 예정
+const { createProxyMiddleware } = require('http-proxy-middleware');
+
+const dataProxy = createProxyMiddleware('/data', { target: 'http://localhost:8000/data' });
+
 
 const router = express.Router();
 
@@ -30,7 +32,22 @@ router.get('/', (req, res, next) => {
         return res.send('he');
 });
 
+router.get('/centerclub', async (req, res, next) => {
+    const data = await Info.findAll({
+        where: { Category: 'center'},
+    })
+    return res.send('hello');
+})
 
+router.get('/academicclub', async (req, res, next) => {
+    const data = await Info.findAll({
+        where: { Category: 'class' },
+    })
+    return res.send('hello');
+})
+
+router.get('/data', dataProxy());
+/*
 router.get('/data', async (req, res, next) => {
     const data = await Info.findAll();
     if (!data) {
@@ -38,6 +55,7 @@ router.get('/data', async (req, res, next) => {
     }
     return res.send(data);
 });
+*/
 /*
 models.post.findAll({
     // pagination
@@ -55,10 +73,11 @@ router.post('/create', upload.single(), async (req, res, next) => {
             Class: req.body.class,
             Image: req.file.filename,
         });
+        res.send('create');
     }
 });
 
-
+//    /back-end/img/<name>
 
 
 router.get('/delete/:name', async (req, res, next) => {
@@ -74,7 +93,6 @@ router.get('/:id', async (req, res, next) => {
         return res.send('pika');
     }
     else {
-        
         const name = path.join(__dirname + '/../img/' + data.Image);
         const content = await fs.readFile(name);
         //console.log(content);
@@ -86,7 +104,7 @@ router.get('/:id', async (req, res, next) => {
 
 router.get('/img/:name', (req, res, next) => {
     const name = req.params.name;
-    res, send(`./img/${name}`);
+    res.send(`./img/${name}`);
 })
 
 

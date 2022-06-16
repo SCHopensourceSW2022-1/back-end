@@ -12,8 +12,7 @@ const session = require('express-session');
 const dotenv = require('dotenv');
 const { sequelize } = require('./models');
 const mysql = require('mysql');
-
-
+const cors = require('cors');
 
 dotenv.config();
 const app = express();
@@ -21,6 +20,7 @@ app.set('port', process.env.PORT || 8000);
 const mainPage = require('./routes/main');
 const logger = require('./logger');
 
+app.use(cors({ origin: true, credentials: true }));
 
 sequelize.sync({ force: false })
     .then(() => {
@@ -44,7 +44,7 @@ app.use(express.static(path.join(__dirname, '../front-end/build')));  // 접속�
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(session({
+const sessionOption = {
     resave: false,
     saveUninitialized: false,
     secret: process.env.COOKIE_SECRET,
@@ -52,14 +52,14 @@ app.use(session({
         httpOnly: true,
         secure: false,
     },
-}));
+}
 
 // 배포용 설정
 if (process.env.NODE_ENV === 'production') {
-    //sessionOption.proxy = true;
-    //sessionOption.cookie.secure = true;
+    sessionOption.proxy = true;
+    sessionOption.cookie.secure = true;
 }
-//app.use(session(sessionOption));
+app.use(session(sessionOption));
 //app.use(passport.initialize())
 //
 
