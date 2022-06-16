@@ -56,13 +56,14 @@ router.get('/data', async (req, res, next) => {
     //res.send(data);
     const img1  = data.map( (x, i) => {
         const name = path.join(__dirname + '/../img/' + x.Image);
-        const content = fs.readFileSync(name);
+        //const content = fs.readFileSync(name, { encoding: 'base64' });
+        const content = fs.readFileSync(name, 'base64');
         //console.log(content);
         //console.log(data);
         data[i].dataValues.img = content;
     });
-    console.log(data);
-    return res.send(data);
+    //console.log(data);
+    return res.send(data[0].dataValues.img);
 });
 
 /*
