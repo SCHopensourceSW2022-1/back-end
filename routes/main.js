@@ -36,14 +36,14 @@ router.get('/centerclub', async (req, res, next) => {
     const data = await Info.findAll({
         where: { Category: 'center'},
     })
-    return res.send('hello');
+    return res.send('hello1');
 })
 
 router.get('/academicclub', async (req, res, next) => {
     const data = await Info.findAll({
         where: { Category: 'class' },
     })
-    return res.send('hello');
+    return res.send('hello2');
 })
 
 
@@ -86,26 +86,18 @@ router.get('/delete/:name', async (req, res, next) => {
     return res.end('delete');
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get('/img/:id', async (req, res, next) => {
     const id = req.params.id;
-    const data = await Info.findOne({ where: { Name: id } });
-    if (!data) {
-        return res.send('pika');
-    }
-    else {
+    const data = await Info.findOne({ where: { Image: id } });
+    if (data) {
         const name = path.join(__dirname + '/../img/' + data.Image);
         const content = await fs.readFile(name);
         //console.log(content);
         return res.end(content);
-        
     }
 });
 
 
-router.get('/img/:name', (req, res, next) => {
-    const name = req.params.name;
-    res.send(`./img/${name}`);
-})
 
 
 /*

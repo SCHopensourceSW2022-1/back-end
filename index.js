@@ -20,7 +20,7 @@ app.set('port', process.env.PORT || 8000);
 const mainPage = require('./routes/main');
 const logger = require('./logger');
 
-app.use(cors({ origin: true, credentials: true }));
+
 
 sequelize.sync({ force: false })
     .then(() => {
@@ -39,6 +39,7 @@ else {
 }
 //
 
+app.use(cors({ origin: true, credentials: true }));
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, '../front-end/build')));  // 접속시 기본 연결 폴더를 front-end 쪽으로 바꿔놓기 위한 설정 구문. 정확한 위치를 모르니 일단 주석처리
 app.use(express.json());
